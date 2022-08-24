@@ -18,7 +18,7 @@ services:
       - backend
   backend:
     build:
-      context: ./spring
+      context: .
       dockerfile: Dockerfile
     container_name: spring
     ports:
