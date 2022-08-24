@@ -1,0 +1,733 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro
+                        http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <changeSet author="anilsenocak" id="1661006636325-6">
+        <createTable tableName="player">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created_at" type="datetime"/>
+            <column name="updated_at" type="datetime"/>
+            <column name="age" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="market_value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-5">
+        <createTable tableName="team">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created_at" type="datetime"/>
+            <column name="updated_at" type="datetime"/>
+            <column name="available_cash" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-4">
+        <createTable tableName="transfer">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created_at" type="datetime"/>
+            <column name="updated_at" type="datetime"/>
+            <column name="asked_price" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="market_value" type="INT"/>
+            <column name="transferred" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="player_id" type="VARCHAR(255)"/>
+            <column name="transferred_from_id" type="VARCHAR(255)"/>
+            <column name="transferred_to_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-3">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-2">
+        <createTable tableName="roles">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(60)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-1">
+        <createTable tableName="users">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created_at" type="datetime"/>
+            <column name="updated_at" type="datetime"/>
+            <column name="email" type="VARCHAR(40)">
+                <constraints unique="true"/>
+            </column>
+            <column name="name" type="VARCHAR(40)"/>
+            <column name="password" type="VARCHAR(100)"/>
+            <column name="username" type="VARCHAR(15)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="anilsenocak" id="1661006636325-7">
+        <createIndex indexName="FK16cnc4ugq97f0y71k3oplbvay" tableName="team" unique="true">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-8">
+        <createIndex indexName="FK7i9btdwomnrbmrf182fjpma7p" tableName="transfer">
+            <column name="transferred_to_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-9">
+        <createIndex indexName="FKdvd6ljes11r44igawmpm1mc5s" tableName="player">
+            <column name="team_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-10">
+        <createIndex indexName="FKe98lusfudhauj501o005b2nma" tableName="transfer">
+            <column name="player_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-11">
+        <createIndex indexName="FKh8ciramu9cc9q3qcqiv4ue8a6" tableName="user_roles">
+            <column name="role_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-12">
+        <createIndex indexName="FKpkvl95k0b13cs51784u94am6e" tableName="transfer" unique="true">
+            <column name="transferred_from_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="anilsenocak" id="1661006636325-13">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="team" constraintName="FK16cnc4ugq97f0y71k3oplbvay" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-14">
+        <addForeignKeyConstraint baseColumnNames="transferred_to_id" baseTableName="transfer" constraintName="FK7i9btdwomnrbmrf182fjpma7p" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="team" validate="true"/>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-15">
+        <addForeignKeyConstraint baseColumnNames="team_id" baseTableName="player" constraintName="FKdvd6ljes11r44igawmpm1mc5s" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="team" validate="true"/>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-16">
+        <addForeignKeyConstraint baseColumnNames="player_id" baseTableName="transfer" constraintName="FKe98lusfudhauj501o005b2nma" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="player" validate="true"/>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-17">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_roles" constraintName="FKh8ciramu9cc9q3qcqiv4ue8a6" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="roles" validate="true"/>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-18">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_roles" constraintName="FKhfh9dx7w3ubf1co1vdev94g3f" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006636325-19">
+        <addForeignKeyConstraint baseColumnNames="transferred_from_id" baseTableName="transfer" constraintName="FKpkvl95k0b13cs51784u94am6e" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="team" validate="true"/>
+    </changeSet>
+
+    <changeSet author="anilsenocak" id="1661006683479-1">
+        <insert tableName="users">
+            <column name="id" value="1e5c4b74-434e-45b3-8172-d9b701247fea"/>
+            <column name="created_at" value="2022-08-20T14:42:21"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="email" value="user@senocak.com2"/>
+            <column name="name" value="Anil User2"/>
+            <column name="password" value="$2a$10$Kwwhk6SzkafMl4DXupo0B.U4fpR3rPFiC/hcDWwoDTFLTRvoCCJH2"/>
+            <column name="username" value="user2"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="8fe1f13e-0a9f-4887-ab8d-4560bd576dba"/>
+            <column name="created_at" value="2022-08-20T14:42:21"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="email" value="admin@senocak.com"/>
+            <column name="name" value="Anil Admin"/>
+            <column name="password" value="$2a$10$5cP2IN2O68deSEbCbI.F7eeQnQMjbh5BwR5u/BQ9xTrcxCT.KD6NS"/>
+            <column name="username" value="admin"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="f80b24dd-ef73-4881-b3d7-1e9a0664a4cb"/>
+            <column name="created_at" value="2022-08-20T14:42:21"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="email" value="user@senocak.com1"/>
+            <column name="name" value="Anil User1"/>
+            <column name="password" value="$2a$10$4nz35NymUMEDU6DqXXKuCukpfmP.E5/R/Dh1pa5/OjhnxfI3NC/e6"/>
+            <column name="username" value="user1"/>
+        </insert>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006683479-2">
+        <insert tableName="roles">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006683479-3">
+        <insert tableName="user_roles">
+            <column name="user_id" value="8fe1f13e-0a9f-4887-ab8d-4560bd576dba"/>
+            <column name="role_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_id" value="1e5c4b74-434e-45b3-8172-d9b701247fea"/>
+            <column name="role_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_id" value="f80b24dd-ef73-4881-b3d7-1e9a0664a4cb"/>
+            <column name="role_id" valueNumeric="2"/>
+        </insert>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006683479-4">
+        <insert tableName="team">
+            <column name="id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+            <column name="created_at" value="2022-08-20T14:42:21"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="available_cash" valueNumeric="1000000"/>
+            <column name="country" value="Turkey"/>
+            <column name="name" value="Team1"/>
+            <column name="user_id" value="f80b24dd-ef73-4881-b3d7-1e9a0664a4cb"/>
+        </insert>
+        <insert tableName="team">
+            <column name="id" value="7a9a491c-b1d2-4532-8c4c-82bdfaae0942"/>
+            <column name="created_at" value="2022-08-20T14:42:21"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="available_cash" valueNumeric="100000000"/>
+            <column name="country" value="Indonesia"/>
+            <column name="name" value="Team 1"/>
+            <column name="user_id" value="8fe1f13e-0a9f-4887-ab8d-4560bd576dba"/>
+        </insert>
+        <insert tableName="team">
+            <column name="id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+            <column name="created_at" value="2022-08-20T14:42:21"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="available_cash" valueNumeric="2000000"/>
+            <column name="country" value="Turkey"/>
+            <column name="name" value="Team2"/>
+            <column name="user_id" value="1e5c4b74-434e-45b3-8172-d9b701247fea"/>
+        </insert>
+    </changeSet>
+    <changeSet author="anilsenocak" id="1661006683479-5">
+        <insert tableName="player">
+            <column name="id" value="014e7a49-1864-4bba-9672-75a0bb22bd4b"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="33"/>
+            <column name="country" value="USA13"/>
+            <column name="first_name" value="John2-13"/>
+            <column name="last_name" value="Doe2-13"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="057fa501-97ac-4bae-8a72-1b1c8f0d27aa"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="28"/>
+            <column name="country" value="USA8"/>
+            <column name="first_name" value="John1-8"/>
+            <column name="last_name" value="Doe1-8"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="0c3ca061-1f1c-44fa-9731-84cb81ee1eff"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="30"/>
+            <column name="country" value="USA10"/>
+            <column name="first_name" value="John2-10"/>
+            <column name="last_name" value="Doe2-10"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="0cbc4310-dff0-4b52-9617-28f42999b0f0"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="39"/>
+            <column name="country" value="USA19"/>
+            <column name="first_name" value="John1-19"/>
+            <column name="last_name" value="Doe1-19"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="19eb6350-2fe4-4184-b83e-da5860d6cf73"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="34"/>
+            <column name="country" value="USA14"/>
+            <column name="first_name" value="John2-14"/>
+            <column name="last_name" value="Doe2-14"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="1fb78861-748b-4a37-b052-55bf21746309"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="27"/>
+            <column name="country" value="USA7"/>
+            <column name="first_name" value="John2-7"/>
+            <column name="last_name" value="Doe2-7"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="27e02847-ddea-4933-be52-a14f39ad0bfa"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="35"/>
+            <column name="country" value="USA15"/>
+            <column name="first_name" value="John2-15"/>
+            <column name="last_name" value="Doe2-15"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="305cedc8-9663-4a4c-a3a6-12e642271fd3"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="24"/>
+            <column name="country" value="USA4"/>
+            <column name="first_name" value="John1-4"/>
+            <column name="last_name" value="Doe1-4"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="34295075-b670-4c2c-a970-2a500c0621ba"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="38"/>
+            <column name="country" value="USA18"/>
+            <column name="first_name" value="John1-18"/>
+            <column name="last_name" value="Doe1-18"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="41ccf281-7243-4b54-af04-ea1fe113c3f6"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="21"/>
+            <column name="country" value="USA1"/>
+            <column name="first_name" value="John2-1"/>
+            <column name="last_name" value="Doe2-1"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="GoalKeeper"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="50d5b033-c3fe-4bef-a08f-adeebdff709a"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="28"/>
+            <column name="country" value="USA8"/>
+            <column name="first_name" value="John2-8"/>
+            <column name="last_name" value="Doe2-8"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="51739c76-e5b0-4ca3-ae21-7d0463ddb09e"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="36"/>
+            <column name="country" value="USA16"/>
+            <column name="first_name" value="John1-16"/>
+            <column name="last_name" value="Doe1-16"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="5793803f-ab82-4f84-8c62-e07c9143d0a1"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="29"/>
+            <column name="country" value="USA9"/>
+            <column name="first_name" value="John2-9"/>
+            <column name="last_name" value="Doe2-9"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="5c9fce7a-b1ff-4fed-a6a8-b70ea207a1a3"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="20"/>
+            <column name="country" value="USA0"/>
+            <column name="first_name" value="John1-0"/>
+            <column name="last_name" value="Doe1-0"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="GoalKeeper"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="643e0626-0c20-41f8-9f11-d581ff6b9479"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="22"/>
+            <column name="country" value="USA2"/>
+            <column name="first_name" value="John1-2"/>
+            <column name="last_name" value="Doe1-2"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="GoalKeeper"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="78a8d89b-02c9-417f-b815-cdc78a5fb5c3"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="37"/>
+            <column name="country" value="USA17"/>
+            <column name="first_name" value="John2-17"/>
+            <column name="last_name" value="Doe2-17"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="7fb7ae44-1d43-4903-b213-d8da6212fc65"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="26"/>
+            <column name="country" value="USA6"/>
+            <column name="first_name" value="John1-6"/>
+            <column name="last_name" value="Doe1-6"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="8a91fba6-cbc2-492b-94b3-3692face531d"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="25"/>
+            <column name="country" value="USA5"/>
+            <column name="first_name" value="John1-5"/>
+            <column name="last_name" value="Doe1-5"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="8f7cd2ea-8df6-4b9e-9664-a8bc6ea5f427"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="24"/>
+            <column name="country" value="USA4"/>
+            <column name="first_name" value="John2-4"/>
+            <column name="last_name" value="Doe2-4"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="971784f5-da23-4609-bf64-89df8dab9857"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="26"/>
+            <column name="country" value="USA6"/>
+            <column name="first_name" value="John2-6"/>
+            <column name="last_name" value="Doe2-6"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="9c45b48c-07c0-49f3-8db6-35b19c5f7bce"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="33"/>
+            <column name="country" value="USA13"/>
+            <column name="first_name" value="John1-13"/>
+            <column name="last_name" value="Doe1-13"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="9d96bb7f-4f71-4cf4-bfd9-82a290e57e0d"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="31"/>
+            <column name="country" value="USA11"/>
+            <column name="first_name" value="John2-11"/>
+            <column name="last_name" value="Doe2-11"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="a7059736-2363-4033-bf07-9cc749c616f5"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="20"/>
+            <column name="country" value="USA0"/>
+            <column name="first_name" value="John2-0"/>
+            <column name="last_name" value="Doe2-0"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="GoalKeeper"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="a84f3328-93b7-47d4-928a-17c9327e46c9"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="35"/>
+            <column name="country" value="USA15"/>
+            <column name="first_name" value="John1-15"/>
+            <column name="last_name" value="Doe1-15"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="af7a091d-db9d-44f0-aca9-eae80bceee55"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="21"/>
+            <column name="country" value="USA1"/>
+            <column name="first_name" value="John1-1"/>
+            <column name="last_name" value="Doe1-1"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="GoalKeeper"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="b12abea0-74c2-4fb1-9b73-eeab5a26dd23"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="37"/>
+            <column name="country" value="USA17"/>
+            <column name="first_name" value="John1-17"/>
+            <column name="last_name" value="Doe1-17"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="bf424382-9c26-40d0-ac99-c529e97e03e8"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="36"/>
+            <column name="country" value="USA16"/>
+            <column name="first_name" value="John2-16"/>
+            <column name="last_name" value="Doe2-16"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="bf5b80b8-18eb-4b3c-9006-3354b60befcc"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="22"/>
+            <column name="country" value="USA2"/>
+            <column name="first_name" value="John2-2"/>
+            <column name="last_name" value="Doe2-2"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="GoalKeeper"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="c599f2f8-fce9-422c-a3a3-1a7f283532f2"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="38"/>
+            <column name="country" value="USA18"/>
+            <column name="first_name" value="John2-18"/>
+            <column name="last_name" value="Doe2-18"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="c917da12-ae0f-410e-8916-e4f4c0fafd11"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="32"/>
+            <column name="country" value="USA12"/>
+            <column name="first_name" value="John2-12"/>
+            <column name="last_name" value="Doe2-12"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="ca3f796f-f35a-4df3-a05b-0ae6c5d9c351"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="32"/>
+            <column name="country" value="USA12"/>
+            <column name="first_name" value="John1-12"/>
+            <column name="last_name" value="Doe1-12"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="cd80e7d1-6fc2-4fc1-b49c-dd16a6c7f1e7"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="27"/>
+            <column name="country" value="USA7"/>
+            <column name="first_name" value="John1-7"/>
+            <column name="last_name" value="Doe1-7"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="cdf536de-c702-4e01-b27d-fe280b1e4521"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="25"/>
+            <column name="country" value="USA5"/>
+            <column name="first_name" value="John2-5"/>
+            <column name="last_name" value="Doe2-5"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="d24adef6-f796-4c70-b066-d973fcab11aa"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="29"/>
+            <column name="country" value="USA9"/>
+            <column name="first_name" value="John1-9"/>
+            <column name="last_name" value="Doe1-9"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="df9ac0fd-3449-4481-a7d9-3deb645727ac"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="31"/>
+            <column name="country" value="USA11"/>
+            <column name="first_name" value="John1-11"/>
+            <column name="last_name" value="Doe1-11"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="e37e4a57-23d1-4922-917d-a1beb68d0f95"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="39"/>
+            <column name="country" value="USA19"/>
+            <column name="first_name" value="John2-19"/>
+            <column name="last_name" value="Doe2-19"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Forward"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="ef10fa80-6b86-4319-850b-4dab83a4b43c"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="30"/>
+            <column name="country" value="USA10"/>
+            <column name="first_name" value="John1-10"/>
+            <column name="last_name" value="Doe1-10"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="f01c5884-1c39-4779-991e-ad59d9401d22"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="23"/>
+            <column name="country" value="USA3"/>
+            <column name="first_name" value="John2-3"/>
+            <column name="last_name" value="Doe2-3"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="8379f0a0-801a-42a0-875e-e03d87e238cb"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="f6214f74-c392-48f8-add5-ef341942c423"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="23"/>
+            <column name="country" value="USA3"/>
+            <column name="first_name" value="John1-3"/>
+            <column name="last_name" value="Doe1-3"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Defender"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+        <insert tableName="player">
+            <column name="id" value="face6bbc-cabf-47d3-b116-bf6420258d52"/>
+            <column name="created_at"/>
+            <column name="updated_at" value="2022-08-20T14:42:21"/>
+            <column name="age" valueNumeric="34"/>
+            <column name="country" value="USA14"/>
+            <column name="first_name" value="John1-14"/>
+            <column name="last_name" value="Doe1-14"/>
+            <column name="market_value" valueNumeric="1000000"/>
+            <column name="position" value="Midfielder"/>
+            <column name="team_id" value="342b3d69-6b16-4ec7-add7-892f2102cd81"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
