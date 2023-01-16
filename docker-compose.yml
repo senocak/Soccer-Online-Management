@@ -32,6 +32,8 @@ services:
       MYSQL_PASSWORD: senocak
     depends_on:
       - mysql
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - backend
 volumes:
