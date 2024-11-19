@@ -1,35 +1,40 @@
 package com.github.senocak.factory;
 
+import com.github.senocak.model.Loan;
 import com.github.senocak.model.Role;
-import com.github.senocak.model.Team;
 import com.github.senocak.model.User;
 import com.github.senocak.util.AppConstants;
-import java.util.HashSet;
+
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+
 import static com.github.senocak.TestConstants.USER_EMAIL;
 import static com.github.senocak.TestConstants.USER_NAME;
 import static com.github.senocak.TestConstants.USER_PASSWORD;
-import static com.github.senocak.TestConstants.USER_USERNAME;
 
 public class UserFactory {
     private UserFactory(){}
 
-    /**
-     * Creates a new user with the given name, username, email, password and roles.
-     * @return the new user
-     */
-    public static User createUser(Team team){
-        User user = new User();
-        user.setName(USER_NAME);
-        user.setUsername(USER_USERNAME);
-        user.setEmail(USER_EMAIL);
-        user.setPassword(USER_PASSWORD);
-        Set<Role> USER_ROLES = new HashSet<>();
-        USER_ROLES.add(createRole(AppConstants.RoleName.ROLE_USER));
-        USER_ROLES.add(createRole(AppConstants.RoleName.ROLE_ADMIN));
-        user.setRoles(USER_ROLES);
-        user.setTeam(team);
-        return user;
+    public static User createUser() {
+        final User build = User.builder()
+                .name(USER_NAME)
+                .surname(USER_NAME)
+                .email(USER_EMAIL)
+                .password(USER_PASSWORD)
+                .roles(Set.of(createRole(AppConstants.RoleName.ROLE_USER), createRole(AppConstants.RoleName.ROLE_ADMIN)))
+                .creditLimit(BigDecimal.valueOf(100_000_000L))
+                .usedCreditLimit(BigDecimal.TEN)
+                .build();
+        build.setId(UUID.randomUUID().toString());
+        return build;
+    }
+
+    public static User createUser(final Loan loan) {
+        final User createUser = createUser();
+        createUser.setLoans(List.of(loan));
+        return createUser;
     }
 
     /**
@@ -38,8 +43,6 @@ public class UserFactory {
      * @return the new role
      */
     public static Role createRole(AppConstants.RoleName roleName){
-        Role role = new Role();
-        role.setName(roleName);
-        return role;
+        return Role.builder().name(roleName).build();
     }
 }

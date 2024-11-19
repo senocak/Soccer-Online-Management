@@ -1,0 +1,68 @@
+### Admin Login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@lorem.com",
+  "password": "lorem"
+}
+
+> {%
+    client.global.set("token", response.body.token)
+%}
+
+### User Login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@lorem.com",
+  "password": "lorem"
+}
+
+> {%
+    client.global.set("token", response.body.token)
+%}
+
+### Get Me
+GET http://localhost:8080/api/v1/user/me?showInstallment=true
+Authorization: Bearer {{token}}
+
+### Get Loans
+GET http://localhost:8080/api/v1/user/loans?installments=true
+    &isPaid=false
+    &next=0
+    &max=100
+Authorization: Bearer {{token}}
+
+> {%
+    client.global.set("firstLoan", response.body.loans[0].id)
+%}
+
+### Get Loan By Id
+GET http://localhost:8080/api/v1/user/loans/{{firstLoan}}
+Authorization: Bearer {{token}}
+
+### Create Loan
+POST http://localhost:8080/api/v1/user/loans
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "amount": 100,
+  "interestRate": 0.2,
+  "numberOfInstallments": 6
+}
+
+> {%
+    client.global.set("firstLoan", response.body.id)
+%}
+
+### Pay Loan
+POST http://localhost:8080/api/v1/user/loans/{{firstLoan}}/pay
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "amount": 3000
+}

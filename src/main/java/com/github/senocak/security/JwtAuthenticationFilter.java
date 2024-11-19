@@ -8,10 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.FilterChain;
 import lombok.RequiredArgsConstructor;
 import javax.servlet.ServletException;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.github.senocak.service.UserService;
@@ -41,29 +41,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String bearerToken = request.getHeader(AppConstants.TOKEN_HEADER_NAME);
-            if (StringUtils.hasText(bearerToken) &&
-                    bearerToken.startsWith(AppConstants.TOKEN_PREFIX) &&
-                    !request.getRequestURI().contains(AppConstants.REFRESH)) {
-                String jwt = bearerToken.substring(7);
-                try{
-                    tokenProvider.validateToken(jwt);
-                    String userName = tokenProvider.getUserNameFromJWT(jwt);
-                    UserDetails userDetails = userService.loadUserByUsername(userName);
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.trace("SecurityContext created");
-                }catch (Exception exception){
-                    ResponseEntity<Object> responseEntity = new RestExceptionHandler()
-                            .handleAccessDeniedException(new RuntimeException(exception.getMessage()));
-
-                    response.getWriter().write(objectMapper.writeValueAsString(responseEntity.getBody()));
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.setContentType("application/json");
-                    return;
-                }
+            final String bearerToken = request.getHeader(AppConstants.TOKEN_HEADER_NAME);
+            String jwt = bearerToken.substring(7);
+            try {
+                if (!bearerToken.startsWith(AppConstants.TOKEN_PREFIX))
+                    throw new InvalidCookieException("Token not starts with " + AppConstants.TOKEN_PREFIX);
+                tokenProvider.validateToken(jwt);
+                String userName = tokenProvider.getUserNameFromJWT(jwt);
+                UserDetails userDetails = userService.loadUserByUsername(userName);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                logger.trace("SecurityContext created");
+            }catch (Exception exception){
+                ResponseEntity<Object> responseEntity = new RestExceptionHandler()
+                        .handleAccessDeniedException(new RuntimeException(exception.getMessage()));
+                response.getWriter().write(objectMapper.writeValueAsString(responseEntity.getBody()));
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                return;
             }
         } catch (Exception ex) {
             log.error("Could not set user authentication in security context. Error: {}",

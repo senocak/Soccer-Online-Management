@@ -1,41 +1,116 @@
-## Soccer online manager game API
+### Credit Module Challenge
+* You are expected to write a backend Loan API for a bank so that their employees can create, list and pay loans for their customers.
+* Your backend service should have those endpoints:
+  * Create Loan: Create a new loan for a given customer, amount, interest rate and number of installments
+    * You should check if customer has enough limit to get this new loan
+    * Number of installments can only be 6, 9, 12, 24
+    * Interest rate can be between 0.1 – 0.5
+    * All installments should have same amount. Total amount for loan should be amount * (1 + interest rate)
+    * Due Date of Installments should be first day of months. So the first installment’s due date should be the first day of next month.
+  * List Loans: List loans for a given customer
+    * If you want you can add more filters like number of installments, is paid etc.
+  * List Installment: List installments for a given loan
+  * Pay Loan: Pay installment for a given loan and amount
+    * Endpoint can pay multiple installments with respect to amount sent with some restriction described below.
+    * Installments should be paid wholly or not at all. So if installments amount is 10 and you send 20, 2 installments can be paid. If you send 15, only 1 can be paid. If you send 5, no installments can be paid.
+    * Earliest installment should be paid first and if there are more money then you should continue to next installment.
+    * Installments have due date that still more than 3 calendar months cannot be paid. So if we were in January, you could pay only for January, February and March installments.
+    * A result should be returned to inform how many installments paid, total amount spent and if loan is paid completely.
+    * Necessary updates should be done in customer, loan and installment tables.
+* Requirements:
+  * Documentation is important. Prepare a document, readme, about how to use the application.
+  * All endpoints should be authorized with an admin user and password
+  * All info should be stored in database as below:
+    * Customer: id, name, surname, creditLimit, usedCreditLimit
+    * Loan: id, customerId, loanAmount, numberOfInstallment, createDate, isPaid
+    * LoanInstallment: id, loanId, amount, paidAmount, dueDate, paymentDate, isPaid
+* Implementation:
+  * We would like you to build a java application using Spring Boot Framework. You can use h2 db as database. You are expected to write some unit tests. Try to build and design your code as it will be deployed to prod (or at least test env ☺ ) Make sure to add information how to build and run the project.
+* Bonus 1: Instead of securing endpoints with an admin username and password. Create an authorization so that while ADMIN users can operate for all customers, CUSTOMER role users can operate for themselves.
+* Bonus 2: For reward and penalty add this logic to paying loan flow:
+  * If an installment is paid before due date, make a discount equal to 0.001*(number of days before due date) So in this case paidAmount of installment will be lower than amount.
+  * If an installment is paid after due date, add a penalty equal to 0.001*(number of days after due date) So in this case paidAmount of installment will be higher than amount.
 
-* You need to write an API for a simple application where football/soccer fans will create fantasy teams and will be able to sell or buy players.
-* User must be able to create an account and log in using the API.
-* Each user can have only one team (user is identified by an email)
-* When the user is signed up, they should get a team of 20 players (the system should generate players):
-  * 3 goalkeepers
-  * 6 defenders
-  * 6 midfielders
-  * 5 attackers
+### Installation
+* ``` docker-compose up -d ```
 
-* Each player has an initial value of $1.000.000.
-* Each team has an additional $5.000.000 to buy other players.
-* When logged in, a user can see their team and player information
+### Tests
 
-* Team has the following information:
-  * Team name, and a country (can be edited)
-  * Team value (sum of player values)
+* `Tests run: 56, Failures: 0, Errors: 0, Skipped: 0`
 
-* Player has the following information
-  * First name, last name, country (can be edited by a team owner)
-  * Age (random number from 18 to 40) and market value
+### Documentation
+#### Swagger
+  * `http://localhost:8088/swagger-ui/index.html`
 
-* A team owner can set the player on a transfer list
-* When a user places a player on a transfer list, they must set the asking price/value for this player. This value should be listed on a market list. When another user/team buys this player, they must be bought for this price.
-* Each user should be able to see all players on a transfer list and filter them by country, team name, player name, and a value.
-* With each transfer, team budgets are updated.
-* When a player is transferred to another team, their value should be increased between 10 and 100 per cent. Implement a random factor for this purpose.
+#### Plain requests
 
-### Implement administrator role.
-* An administrator who can CRUD users, teams, players, add new players to the market or in the team and change all player/team information, including player’s value
-* REST API. Make it possible to perform all user and admin actions via the API, including authentication.
-* In any case, you should be able to explain how a REST API works and demonstrate that by creating functional tests that use the REST Layer directly. Please be prepared to use REST clients like Postman, cURL, etc. for this purpose.
-* Write unit and e2e tests.
+```http request
+### Admin Login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
 
-### Conclusion
-* Total tests: **185**
-* Code coverage:
-  * Classes: **95.5%**
-  * Method: **93.9%**
-  * Line: **86%**
+{
+  "email": "admin@lorem.com",
+  "password": "lorem"
+}
+
+> {%
+  client.global.set("token", response.body.token)
+%}
+
+### User Login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@lorem.com",
+  "password": "lorem"
+}
+
+> {%
+  client.global.set("token", response.body.token)
+%}
+
+### Get Me
+GET http://localhost:8080/api/v1/user/me?showInstallment=true
+Authorization: Bearer {{token}}
+
+### Get Loans
+GET http://localhost:8080/api/v1/user/loans?installments=true
+        &isPaid=false
+        &next=0
+        &max=100
+Authorization: Bearer {{token}}
+
+> {%
+  client.global.set("firstLoan", response.body.loans[0].id)
+%}
+
+### Get Loan By Id
+GET http://localhost:8080/api/v1/user/loans/{{firstLoan}}
+Authorization: Bearer {{token}}
+
+### Create Loan
+POST http://localhost:8080/api/v1/user/loans
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "amount": 100,
+  "interestRate": 0.2,
+  "numberOfInstallments": 6
+}
+
+> {%
+  client.global.set("firstLoan", response.body.id)
+%}
+
+### Pay Loan
+POST http://localhost:8080/api/v1/user/loans/{{firstLoan}}/pay
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "amount": 3000
+}
+```

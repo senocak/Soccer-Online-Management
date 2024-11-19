@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     /**
-     * Getting username from the security context
      * @param aInRoles -- roles that user must have
      * @return  -- boolean or null
      * @throws AccessDeniedException -- if user does not have required roles

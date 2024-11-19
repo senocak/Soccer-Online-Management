@@ -1,26 +1,22 @@
 package com.github.senocak.service;
 
 import com.github.senocak.dto.auth.RoleResponse;
-import com.github.senocak.dto.player.PlayerDto;
-import com.github.senocak.dto.team.TeamDto;
-import com.github.senocak.dto.transfer.TransferDto;
+import com.github.senocak.dto.loan.LoanDto;
+import com.github.senocak.dto.loan.LoanInstallmentDto;
 import com.github.senocak.dto.user.UserResponse;
-import com.github.senocak.factory.PlayerFactory;
-import com.github.senocak.factory.TeamFactory;
-import com.github.senocak.factory.TransferFactory;
+import com.github.senocak.factory.LoanFactory;
 import com.github.senocak.factory.UserFactory;
-import com.github.senocak.model.Player;
+import com.github.senocak.model.Loan;
+import com.github.senocak.model.LoanInstallment;
 import com.github.senocak.model.Role;
-import com.github.senocak.model.Team;
-import com.github.senocak.model.Transfer;
 import com.github.senocak.model.User;
 import com.github.senocak.util.AppConstants;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
@@ -30,75 +26,50 @@ public class DtoConverterTest {
     @Test
     public void givenUser_whenConvertEntityToDto_thenAssertResult(){
         // Given
-        User user = UserFactory.createUser(null);
+        final User user = UserFactory.createUser();
         // When
-        UserResponse convertEntityToDto = DtoConverter.convertEntityToDto(user);
+        final UserResponse convertEntityToDto = DtoConverter.convertEntityToDto(user,
+                false, false);
         // Then
-        Assertions.assertEquals(user.getName(), convertEntityToDto.getName());
-        Assertions.assertEquals(user.getEmail(), convertEntityToDto.getEmail());
-        Assertions.assertEquals(user.getUsername(), convertEntityToDto.getUsername());
+        assertEquals(user.getName(), convertEntityToDto.getName());
+        assertEquals(user.getEmail(), convertEntityToDto.getEmail());
+        assertEquals(user.getSurname(), convertEntityToDto.getSurname());
     }
 
     @Test
     public void givenRole_whenConvertEntityToDto_thenAssertResult(){
         // Given
-        Role role = new Role();
-        role.setName(AppConstants.RoleName.ROLE_USER);
+        final Role role = Role.builder().name(AppConstants.RoleName.ROLE_USER).build();
         // When
-        RoleResponse convertEntityToDto = DtoConverter.convertEntityToDto(role);
+        final RoleResponse convertEntityToDto = DtoConverter.convertEntityToDto(role);
         // Then
-        Assertions.assertEquals(role.getName(), convertEntityToDto.getName());
+        assertEquals(role.getName(), convertEntityToDto.getName());
     }
 
     @Test
-    public void givenTeam_whenConvertEntityToDto_thenAssertResult(){
+    public void givenLoan_whenConvertEntityToDto_thenAssertResult(){
         // Given
-        Team team = TeamFactory.createTeam(UserFactory.createUser(null));
+        final Loan loan = LoanFactory.createLoan(UserFactory.createUser());
         // When
-        TeamDto convertEntityToDto = DtoConverter.convertEntityToDto(team, true);
+        final LoanDto convertEntityToDto = DtoConverter.convertEntityToDto(loan, true, true);
         // Then
-        Assertions.assertEquals(team.getId(), convertEntityToDto.getId());
-        Assertions.assertEquals(team.getName(), convertEntityToDto.getName());
-        Assertions.assertEquals(team.getCountry(), convertEntityToDto.getCountry());
-        Assertions.assertEquals(team.getUser().getUsername(), convertEntityToDto.getUser().getUsername());
-        Assertions.assertEquals(team.getAvailableCash(), convertEntityToDto.getAvailableCash());
-        Assertions.assertEquals(1, convertEntityToDto.getPlayers().size());
-        Assertions.assertEquals(team.getPlayers().get(0).getFirstName(), convertEntityToDto.getPlayers().get(0).getFirstName());
-        Assertions.assertEquals(team.getPlayers().get(0).getLastName(), convertEntityToDto.getPlayers().get(0).getLastName());
-        Assertions.assertEquals(team.getUser().getName(),convertEntityToDto.getUser().getName());
+        assertEquals(convertEntityToDto.getAmount(), convertEntityToDto.getAmount());
+        assertEquals(convertEntityToDto.getNumberOfInstallment(), convertEntityToDto.getNumberOfInstallment());
+        assertEquals(convertEntityToDto.getCreateDate(), convertEntityToDto.getCreateDate());
+        assertEquals(convertEntityToDto.isPaid(), convertEntityToDto.isPaid());
     }
-
     @Test
-    public void givenPlayer_whenConvertEntityToDto_thenAssertResult(){
+    public void givenLoanInstallment_whenConvertEntityToDto_thenAssertResult(){
         // Given
-        Player player = PlayerFactory.createPlayer(TeamFactory.createTeam(null));
+        final LoanInstallment transfer = LoanFactory.createInstallment(LoanFactory.createLoan());
         // When
-        PlayerDto convertEntityToDto = DtoConverter.convertEntityToDto(player, true);
+        final LoanInstallmentDto convertEntityToDto = DtoConverter.convertEntityToDto(transfer, false);
         // Then
-        Assertions.assertEquals(player.getId(), convertEntityToDto.getId());
-        Assertions.assertEquals(player.getFirstName(), convertEntityToDto.getFirstName());
-        Assertions.assertEquals(player.getLastName(), convertEntityToDto.getLastName());
-        Assertions.assertEquals(player.getCountry(), convertEntityToDto.getCountry());
-        Assertions.assertEquals(player.getAge(), convertEntityToDto.getAge());
-        Assertions.assertEquals(player.getPosition(), convertEntityToDto.getPosition());
-        Assertions.assertEquals(player.getMarketValue(), convertEntityToDto.getMarketValue());
-        Assertions.assertEquals(player.getTeam().getName(), convertEntityToDto.getTeamDto().getName());
-        Assertions.assertEquals(player.getTeam().getCountry(), convertEntityToDto.getTeamDto().getCountry());
-    }
-
-    @Test
-    public void givenTransfer_whenConvertEntityToDto_thenAssertResult(){
-        // Given
-        Transfer transfer = TransferFactory.createTransfer(PlayerFactory.createPlayer(null),
-                TeamFactory.createTeam(null),TeamFactory.createTeam(null));
-        // When
-        TransferDto convertEntityToDto = DtoConverter.convertEntityToDto(transfer);
-        // Then
-        Assertions.assertEquals(transfer.getId(), convertEntityToDto.getId());
-        Assertions.assertEquals(transfer.getMarketValue(), convertEntityToDto.getMarketValue());
-        Assertions.assertEquals(transfer.getAskedPrice(), convertEntityToDto.getAskedPrice());
-        Assertions.assertEquals(transfer.getPlayer().getFirstName(), convertEntityToDto.getPlayer().getFirstName());
-        Assertions.assertEquals(transfer.getTransferredFrom().getName(), convertEntityToDto.getTransferredFrom().getName());
-        Assertions.assertEquals(transfer.getTransferredTo().getName(), convertEntityToDto.getTransferredTo().getName());
+        assertEquals(transfer.getId(), convertEntityToDto.getId());
+        assertEquals(transfer.getAmount(), convertEntityToDto.getAmount());
+        assertEquals(transfer.getPaidAmount(), convertEntityToDto.getPaidAmount());
+        assertEquals(transfer.getDueDate(), convertEntityToDto.getDueDate());
+        assertEquals(transfer.getPaymentDate(), convertEntityToDto.getPaymentDate());
+        assertEquals(transfer.isPaid(), convertEntityToDto.isPaid());
     }
 }
