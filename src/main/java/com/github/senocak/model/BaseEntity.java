@@ -1,7 +1,6 @@
 package com.github.senocak.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,13 +15,15 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
 

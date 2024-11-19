@@ -33,8 +33,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
                                     .scheme("bearer")
                                     .bearerFormat("JWT"))
                 )
-                .info(new Info().title("Credit Module Challenge").version(appVersion)
-                        .description("Credit Module Challenge")
+                .info(new Info().title("A soccer online manager game API").version(appVersion)
+                        .description("A soccer online manager game API")
                         .termsOfService("https://github.com/senocak")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }

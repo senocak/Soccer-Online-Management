@@ -7,11 +7,11 @@ import com.github.senocak.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import com.github.senocak.service.UserService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,9 +21,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 
 @Configuration
+@EnableJpaAuditing
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
@@ -89,6 +89,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers( "/api/v1/teams").permitAll()
+                .antMatchers( "/api/v1/players").permitAll()
+                .antMatchers( "/api/v1/transfers").permitAll()
                 .antMatchers( "/swagger-ui/**", "/api/v1/swagger/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

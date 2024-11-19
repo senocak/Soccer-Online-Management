@@ -12,13 +12,13 @@ import javax.validation.constraints.Size;
 public class RegisterRequest {
     @NotNull
     @Size(min = 4, max = 40)
-    @Schema(example = "Lorem", description = "Name of the user", required = true, name = "name", type = "String")
+    @Schema(example = "Lorem Ipsum", description = "Name of the user", required = true, name = "name", type = "String")
     private String name;
 
     @NotNull
     @Size(min = 3, max = 15)
-    @Schema(example = "Ipsum", description = "Surname of the user", required = true, name = "surname", type = "String")
-    private String surname;
+    @Schema(example = "asenocak", description = "Username of the user", required = true, name = "username", type = "String")
+    private String username;
 
     @NotNull
     @ValidEmail
@@ -26,7 +26,7 @@ public class RegisterRequest {
     private String email;
 
     @NotNull
-    @Size(min = 4, max = 20)
+    @Size(min = 6, max = 20)
     @Schema(example = "asenocak123", description = "Password of the user", required = true, name = "password", type = "String")
     private String password;
 }

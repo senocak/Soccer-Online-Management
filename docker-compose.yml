@@ -1,15 +1,40 @@
 services:
+  mysql:
+    image: mysql:8.0.1
+    restart: always
+    container_name: database
+    environment:
+      MYSQL_ROOT_HOST: localhost
+      MYSQL_DATABASE: spring
+      # MYSQL_USER: root (root user is created by default)
+      MYSQL_USER: anil
+      MYSQL_PASSWORD: senocak
+      MYSQL_ROOT_PASSWORD: senocak
+    ports:
+      - 3310:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend
   backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: IngHubsCreditModule
+    container_name: spring
     ports:
-      - "8080:8080"
-    restart: on-failure
+      - 8080:8080
+    restart: always
     environment:
-      PORT: 8080
+      MYSQL_HOST: database
+      MYSQL_PORT: 3306
+      MYSQL_DB: turkcell
+      MYSQL_USER: root
+      MYSQL_PASSWORD: senocak
+    depends_on:
+      - mysql
     networks:
-      - ing-hubs
+      - backend
+volumes:
+  mysql-data:
 networks:
-  ing-hubs:
+  backend:

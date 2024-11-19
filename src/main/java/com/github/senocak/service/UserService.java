@@ -21,27 +21,29 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public User findById(final String id){
-        return userRepository.findById(id)
+    /**
+     * @param username -- string username to find in db
+     * @return -- Optional User object
+     */
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email"));
     }
 
     /**
-     * @param email -- string email to find in db
+     * @param username -- string username to find in db
      * @return -- Optional User object
      */
-    public User findByEmail(final String email){
-        return userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found with email"));
+    public boolean existsByUsername(String username){
+        return userRepository.existsByUsername(username);
     }
 
     /**
      * @param email -- string email to find in db
      * @return -- true or false
      */
-    public boolean existsByEmail(final String email){
+    public boolean existsByEmail(String email){
         return userRepository.existsByEmail(email);
     }
 
@@ -49,7 +51,7 @@ public class UserService implements UserDetailsService {
      * @param user -- User object to persist to db
      * @return -- User object that is persisted to db
      */
-    public User save(final User user){
+    public User save(User user){
         return userRepository.save(user);
     }
 
@@ -57,17 +59,18 @@ public class UserService implements UserDetailsService {
      * @param user -- User object
      * @return -- Spring User object
      */
-    public static org.springframework.security.core.userdetails.User create(final User user) {
+    public static org.springframework.security.core.userdetails.User create(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
                 new SimpleGrantedAuthority(role.getName().name())
         ).collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
     @Override
     @Transactional
-    public org.springframework.security.core.userdetails.User loadUserByUsername(final String username) throws UsernameNotFoundException {
-        User user = findByEmail(username);
+    public org.springframework.security.core.userdetails.User loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+        User user = findByUsername(username);
         return create(user);
     }
 
@@ -76,10 +79,10 @@ public class UserService implements UserDetailsService {
      * @throws ServerException -- throws ServerException
      */
     public User loggedInUser() throws ServerException {
-        String email = ((org.springframework.security.core.userdetails.User)SecurityContextHolder
+        String username = ((org.springframework.security.core.userdetails.User)SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal()).getUsername();
-        return userRepository.findByEmail(email).orElseThrow(() ->
+        return userRepository.findByUsername(username).orElseThrow(() ->
             new ServerException(AppConstants.OmaErrorMessageType.NOT_FOUND,
-                new String[]{"User", "email", email}, HttpStatus.NOT_FOUND));
+                new String[]{"User", "username", username}, HttpStatus.NOT_FOUND));
     }
 }

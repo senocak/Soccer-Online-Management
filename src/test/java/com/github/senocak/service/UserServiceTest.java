@@ -12,14 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
 
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
@@ -31,28 +29,36 @@ public class UserServiceTest {
     @Mock org.springframework.security.core.userdetails.User user;
 
     @Test
-    public void givenEmail_whenFindByEmail_thenAssertResult(){
+    public void givenUsername_whenFindByUsername_thenAssertResult(){
         // Given
-        User user = UserFactory.createUser();
-        doReturn(Optional.of(user)).when(userRepository).findByEmail("lorem@ipsum.com");
+        User user = UserFactory.createUser(null);
+        Mockito.doReturn(Optional.of(user)).when(userRepository).findByUsername("username");
         // When
-        User findByEmail = userService.findByEmail("lorem@ipsum.com");
+        User findByUsername = userService.findByUsername("username");
         // Then
-        assertEquals(user, findByEmail);
+        Assertions.assertEquals(user, findByUsername);
     }
 
     @Test
-    public void givenNullEmail_whenFindByEmail_thenAssertResult(){
+    public void givenNullUsername_whenFindByUsername_thenAssertResult(){
         // When
-        Executable closureToTest = () -> userService.findByEmail("lorem@ipsum.com");
+        Executable closureToTest = () -> userService.findByUsername("username");
         // Then
-        assertThrows(UsernameNotFoundException.class, closureToTest);
+        Assertions.assertThrows(UsernameNotFoundException.class, closureToTest);
     }
 
     @Test
-    public void givenEmail_whenExistsByEmail_thenAssertResult(){
+    public void givenUsername_whenExistsByUsername_thenAssertResult(){
         // When
-        boolean existsByEmail = userService.existsByEmail("lorem@ipsum.com");
+        boolean existsByUsername = userService.existsByUsername("username");
+        // Then
+        Assertions.assertFalse(existsByUsername);
+    }
+
+    @Test
+    public void givenUsername_whenExistsByEmail_thenAssertResult(){
+        // When
+        boolean existsByEmail = userService.existsByEmail("username");
         // Then
         Assertions.assertFalse(existsByEmail);
     }
@@ -60,65 +66,65 @@ public class UserServiceTest {
     @Test
     public void givenUser_whenSave_thenAssertResult(){
         // Given
-        final User user = UserFactory.createUser();
-        doReturn(user).when(userRepository).save(user);
+        User user = UserFactory.createUser(null);
+        Mockito.doReturn(user).when(userRepository).save(user);
         // When
-        final User save = userService.save(user);
+        User save = userService.save(user);
         // Then
-        assertEquals(user, save);
+        Assertions.assertEquals(user, save);
     }
 
     @Test
     public void givenUser_whenCreate_thenAssertResult(){
         // Given
-        final User user = UserFactory.createUser();
+        User user = UserFactory.createUser(null);
         // When
-        final org.springframework.security.core.userdetails.User create = UserService.create(user);
+        org.springframework.security.core.userdetails.User create = UserService.create(user);
         // Then
-        assertEquals(user.getEmail(), create.getUsername());
+        Assertions.assertEquals(user.getUsername(), create.getUsername());
     }
 
     @Test
     public void givenNullUsername_whenLoadUserByUsername_thenAssertResult(){
         // When
-        final Executable closureToTest = () -> userService.loadUserByUsername("lorem@ipsum.com");
+        Executable closureToTest = () -> userService.loadUserByUsername("username");
         // Then
-        assertThrows(UsernameNotFoundException.class, closureToTest);
+        Assertions.assertThrows(UsernameNotFoundException.class, closureToTest);
     }
 
     @Test
     public void givenUsername_whenLoadUserByUsername_thenAssertResult(){
         // Given
-        final User user = UserFactory.createUser();
-        doReturn(Optional.of(user)).when(userRepository).findByEmail("lorem@ipsum.com");
+        User user = UserFactory.createUser(null);
+        Mockito.doReturn(Optional.of(user)).when(userRepository).findByUsername("username");
         // When
-        final org.springframework.security.core.userdetails.User loadUserByUsername = userService.loadUserByUsername("lorem@ipsum.com");
+        org.springframework.security.core.userdetails.User loadUserByUsername = userService.loadUserByUsername("username");
         // Then
-        assertEquals(user.getEmail(), loadUserByUsername.getUsername());
+        Assertions.assertEquals(user.getUsername(), loadUserByUsername.getUsername());
     }
 
     @Test
     public void givenNotLoggedIn_whenLoadUserByUsername_thenAssertResult(){
         // Given
         SecurityContextHolder.getContext().setAuthentication(auth);
-        doReturn(user).when(auth).getPrincipal();
+        Mockito.doReturn(user).when(auth).getPrincipal();
         // When
-        final Executable closureToTest = () -> userService.loggedInUser();
+        Executable closureToTest = () -> userService.loggedInUser();
         // Then
-        assertThrows(ServerException.class, closureToTest);
+        Assertions.assertThrows(ServerException.class, closureToTest);
     }
 
     @Test
     public void givenLoggedIn_whenLoadUserByUsername_thenAssertResult() throws ServerException {
         // Given
         SecurityContextHolder.getContext().setAuthentication(auth);
-        doReturn(user).when(auth).getPrincipal();
-        doReturn("lorem@ipsum.com").when(user).getUsername();
-        final User user = UserFactory.createUser();
-        doReturn(Optional.of(user)).when(userRepository).findByEmail("lorem@ipsum.com");
+        Mockito.doReturn(user).when(auth).getPrincipal();
+        Mockito.doReturn("username").when(user).getUsername();
+        User user = UserFactory.createUser(null);
+        Mockito.doReturn(Optional.of(user)).when(userRepository).findByUsername("username");
         // When
-        final User loggedInUser = userService.loggedInUser();
+        User loggedInUser = userService.loggedInUser();
         // Then
-        assertEquals(user.getSurname(), loggedInUser.getSurname());
+        Assertions.assertEquals(user.getUsername(), loggedInUser.getUsername());
     }
 }

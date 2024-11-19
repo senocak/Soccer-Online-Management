@@ -1,11 +1,9 @@
 package com.github.senocak.model;
 
 import com.github.senocak.util.AppConstants;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,13 +15,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
+@Slf4j
 @Getter
 @Setter
 @Entity
 @Table(name = "roles")
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

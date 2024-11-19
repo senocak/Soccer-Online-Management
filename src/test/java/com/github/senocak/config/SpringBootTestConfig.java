@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,4 +21,6 @@ import java.lang.annotation.Target;
 @ActiveProfiles(value = { "integration-test" })
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
+@Sql(value = "/insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public @interface SpringBootTestConfig {}
